@@ -1,55 +1,34 @@
-﻿#include <chrono>
-#include <ctime>
-#include <iostream>
+﻿#include <iostream>
+#include <vector>
+#include <string>
+
 using namespace std;
 
 
 // ЗАПИСЫВАЕТ НАПОМИНАНИЕ
-
 string bookmark()
 {
 	string reminder;
-	cout << "Введите напоминание: "; cin >> reminder;
+	cout << "Введите напоминание: ";
+	getline(cin, reminder);
 	return reminder;
 }
 // ЗАПИСЫВАЕТ ДАТУ
 string dates()
 {
 	string date;
-	cout << "Введите когда вам напомнить: "; cin >> date;
-	cout << "Дата запомнина." << endl;
+	cout << "Введите когда вам напомнить: ";
+	getline(cin, date);
+	cout << "Дата запомнена." << endl;
 	return date;
 }
 
-// ДОЛЖНО ЗАПИСЫВАТЬ ЯЧЕЙКУ ЕСЛИ ОНА СОДЕРЖИТ ПУСТУЮ СТРОКУ
-void recording(string arr[], int size, string info) {
-
-	for (int i = 0; i < size; i++) {
-		if (arr[i] != "") {
-			arr[i] = info;
-			break;
-		}
-
-	}
-		
-}
-// СОЗДОЁТ СПИСОК СОСТО ЯЩИЙ ИЗ ПУСТЫХ СТРОК
-void fill_array(string arr[], int size)
-{
-	for (int i = 0; i < size; i++)
+// ВЫВОДИТ СПИСОК НАПОМИНАНИЙ
+void print_list(vector<string> bookmarks, vector<string> dates) {
+	for (int i = 0; i < bookmarks.size(); i++)
 	{
-		arr[i] = "";
+		cout << "Напоминание: " << bookmarks[i] << "; Дата: " << dates[i] << endl;
 	}
-}
-// НЕ РОБОТОЕТ ПОЧИНИТЬ | ДОЛЖЕН ВЫВОДИТЬ СПИСОК ЕСЛИ ЯЧЕЙКА НЕ ПУСТАЯ.
-void print_list(string arr1[], string arr2[]) {
-
-
-	for (int i = 0; arr1[i] != ""; i++) {
-
-		cout << "Ячейка "<< i <<"  "<< arr1[i] <<"--"<< arr2[i] << endl;
-	}
-
 }
 
 
@@ -59,38 +38,26 @@ int main()
 
 	string reminder;
 	string date;
-	int request;
-	const int limit = 500;
-	string list_reminder[limit];
-	string list_date[limit];
+	string request;
+	vector<string> list_reminder;
+	vector<string> list_date;
 
-	fill_array(list_reminder, limit);
-	fill_array(list_date,limit);
-	do
+	while (request != "0")
 	{
-
-
-		cout << "Хотите добавить напоминание? |1-да|0-нет|2-посмотреть список напоминаний|" << endl;cin >>request;
-		if (request == 1)
+		cout << "Хотите добавить напоминание? |1-да|0-нет|2-посмотреть список напоминаний|" << endl;
+		getline(cin, request);
+		if (request == "1")
 		{
 			reminder = bookmark();
 			date = dates();
 
+			list_reminder.push_back(reminder);
+			list_date.push_back(date);
 
-			recording(list_reminder, limit, reminder);
-			recording(list_date, limit, date);
-
-		}else if(request == 2) {
-
-			print_list(list_date, list_reminder);
 		}
+		else if (request == "2") {
 
-
-
-	} while (request != 0);
-
+			print_list(list_reminder, list_date);
+		}
+	}
 }
-
-
-
-
