@@ -27,8 +27,21 @@ string dates()
 void print_list(vector<string> bookmarks, vector<string> dates) {
 	for (int i = 0; i < bookmarks.size(); i++)
 	{
-		cout << "Напоминание: " << bookmarks[i] << "; Дата: " << dates[i] << endl;
+		cout << i <<": ( Напоминание: " << bookmarks[i] << "; Дата: " << dates[i] << " )" << endl;
 	}
+}
+
+//УДАЛЯЕТ ЯЧЕЙКИ
+void delete_reminder(vector<string>& bookmarks, vector<string>& dates)
+{
+	string delete_index;
+	cout << "Введите номер напоминания: ";
+	getline(cin, delete_index);
+
+	//TODO: Обработчик ошибок на случай некорректного индекса
+
+	bookmarks.erase(bookmarks.begin() + stoi(delete_index));
+	dates.erase(dates.begin() + stoi(delete_index));
 }
 
 
@@ -44,7 +57,7 @@ int main()
 
 	while (request != "0")
 	{
-		cout << "Хотите добавить напоминание? |1-да|0-нет|2-посмотреть список напоминаний|" << endl;
+		cout << "Хотите добавить напоминание? |1-да|0-нет|2-посмотреть список напоминаний|3-удалить напоминание" << endl;
 		getline(cin, request);
 		if (request == "1")
 		{
@@ -58,6 +71,9 @@ int main()
 		else if (request == "2") {
 
 			print_list(list_reminder, list_date);
+		}
+		else if (request == "3") {
+			delete_reminder(list_reminder, list_date);
 		}
 	}
 }
