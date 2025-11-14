@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <vector>
 #include <string>
-
 using namespace std;
 
 
@@ -27,7 +26,7 @@ string dates()
 void print_list(vector<string> bookmarks, vector<string> dates) {
 	for (int i = 0; i < bookmarks.size(); i++)
 	{
-		cout << i <<": ( Напоминание: " << bookmarks[i] << "; Дата: " << dates[i] << " )" << endl;
+		cout << i << ": ( Напоминание: " << bookmarks[i] << "; Дата: " << dates[i] << " )" << endl;
 	}
 }
 
@@ -35,13 +34,49 @@ void print_list(vector<string> bookmarks, vector<string> dates) {
 void delete_reminder(vector<string>& bookmarks, vector<string>& dates)
 {
 	string delete_index;
+	string request;
+	int request_int;
 	cout << "Введите номер напоминания: ";
 	getline(cin, delete_index);
+	request_int = stoi(delete_index);
+
+	/*
+	if (not(request_int > bookmarks.size()) or not(request_int < 0)) {
+
+
+	 //TODO: Обработчик ошибок на случай некорректного индекса
+
+	 bookmarks.erase(bookmarks.begin() + stoi(delete_index));
+
+	 dates.erase(dates.begin() + stoi(delete_index));
+
+	 cout << "Удоление выполнино" << endl;
+	 return;
+	}
+	else {
+	 cout << "Вы вели индекс больше или меньше размера мосива" << endl;
+	 return;
+	}
+	*/
+	if (request_int > bookmarks.size() or request_int < 0) {
+
+		cout << "Вы вели индекс больше или меньше размера мосива" << endl;
+
+		return;
+	}
+
+
 
 	//TODO: Обработчик ошибок на случай некорректного индекса
 
 	bookmarks.erase(bookmarks.begin() + stoi(delete_index));
+
 	dates.erase(dates.begin() + stoi(delete_index));
+
+	cout << "Удоление выполнино" << endl;
+	return;
+
+
 }
 
 
