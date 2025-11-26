@@ -2,16 +2,59 @@
 #include <vector>
 #include <string>
 #include <ctime>
+
 using namespace std;
 
 enum ErrorType {
-    YearError, MonthError, DayError
+    YearError, MonthError, DayError, HourError, MinutesError
 };
 enum DAYS {
     BEGIN_DAY = 1, END_DAY_28 = 28, END_DAY_30 = 30, END_DAY_31 = 31
 };
+enum Times
+{
+    BEGIN_Hour_and_Minutes = 0, End_Hour = 23, End_Minutes = 59
+};
 
-class Date {
+struct Time
+{
+private:
+    unsigned int _hour;
+    unsigned int _minutes;
+
+    void CheckHour(int hour)
+    {
+        if (hour > Times::End_Hour || hour < Times::BEGIN_Hour_and_Minutes) {
+            throw ErrorType::HourError;
+        }
+    }
+    void CheckMinutes(int minutes)
+    {
+        if (minutes > Times::End_Minutes || minutes < Times::BEGIN_Hour_and_Minutes) {
+            throw ErrorType::MinutesError;
+        }
+    }
+public:
+    void Init(int hour, int minutes)
+    {
+        CheckHour(hour);
+        CheckMinutes(minutes);
+
+        _hour = hour;
+        _minutes = minutes;
+    }
+
+    int GetHour() {
+        return _hour;
+    }
+
+    int GetMinutes() {
+        return _minutes;
+    }
+};
+
+
+struct Date {
 private:
     unsigned int _day;
     unsigned int _month;
@@ -88,16 +131,17 @@ public:
     int GetMonth() {
         return _month;
     }
+
     int GetYear() {
         return _year;
     }
 };
-
 // СТРУКТУРА КОТОРАЯ ХРАНИТ ДАТУ И ТО ЧТО НАДО СДЕЛАТЬ В ЭТУ ДАТУ
 struct Reminder
 {
     string reminder;
     Date date;
+    Time time;
 };
 // ЗАПИСЫВАЕТ НАПОМИНАНИЕ
 Reminder add_reminderbookmark()
@@ -110,7 +154,16 @@ Reminder add_reminderbookmark()
     do {
         repeat = false;
 
+
         string temp_input;
+        cout << "Введите час: ";
+        getline(cin, temp_input);
+        int hour = stoi(temp_input);
+
+        cout << "Введите минуты: ";
+        getline(cin, temp_input);
+        int minutes = stoi(temp_input);
+
         cout << "Введите год: ";
         getline(cin, temp_input);
         int year = stoi(temp_input);
@@ -124,11 +177,21 @@ Reminder add_reminderbookmark()
         int day = stoi(temp_input);
 
         try {
+
+            
+            result.time.Init(hour, minutes);
             result.date.Init(day, month, year);
+            
             cout << "Дата запомнена." << endl;
         }
         catch (ErrorType error) {
             switch (error) {
+            case ErrorType::HourError:
+                cerr << "Неверный час" << endl;
+                break;
+            case ErrorType::MinutesError:
+                cerr << "Неверный менута" << endl;
+                break;
             case ErrorType::MonthError:
                 cerr << "Неверный месяц" << endl;
                 break;
@@ -147,7 +210,9 @@ void print_list(vector<Reminder>& bookmarks)
 {
     for (int i = 0; i < bookmarks.size(); i++)
     {
-        cout << i << ": ( Напоминание: " << bookmarks[i].reminder << "; Дата: " << bookmarks[i].date.GetDay() << "." << bookmarks[i].date.GetMonth() << "." << bookmarks[i].date.GetYear() << " )" << endl;
+        cout << i << ": ( Напоминание: " << bookmarks[i].reminder << 
+        "; Время: "<< bookmarks[i].time.GetHour()<<":"<< bookmarks[i].time.GetMinutes()<<
+        " Дата: " << bookmarks[i].date.GetDay() << "." << bookmarks[i].date.GetMonth() << "." << bookmarks[i].date.GetYear() << " )" << endl;
     }
 }
 // УДАЛЯЕТ ЯЧЕЙКИ
