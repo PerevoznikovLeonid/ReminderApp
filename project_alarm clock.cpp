@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <ctime>
@@ -13,54 +13,52 @@ enum DAYS {
 };
 enum Times
 {
-    BEGIN_Hour_and_Minutes = 0, End_Hour = 23, End_Minutes = 59
+    END_HOUR = 23, END_MINUTES = 59
 };
 
-struct Time
+class Time
 {
 private:
     unsigned int _hour;
     unsigned int _minutes;
 
-    void CheckHour(int hour)
+    unsigned int checkHour(const unsigned int hour)
     {
-        if (hour > Times::End_Hour || hour < Times::BEGIN_Hour_and_Minutes) {
+        if (hour > Times::END_HOUR) {
             throw ErrorType::HourError;
         }
+        return hour;
     }
-    void CheckMinutes(int minutes)
+    unsigned int checkMinutes(const unsigned int minutes)
     {
-        if (minutes > Times::End_Minutes || minutes < Times::BEGIN_Hour_and_Minutes) {
+        if (minutes > Times::END_MINUTES) {
             throw ErrorType::MinutesError;
         }
+        return minutes;
     }
 public:
-    void Init(int hour, int minutes)
-    {
-        CheckHour(hour);
-        CheckMinutes(minutes);
-
-        _hour = hour;
-        _minutes = minutes;
+    Time(const int hour = 0, const int minutes = 0) {
+        _hour = checkHour(hour);
+        _minutes = checkMinutes(minutes);
     }
 
-    int GetHour() {
+    unsigned int getHour() const {
         return _hour;
     }
 
-    int GetMinutes() {
+    unsigned int getMinutes() const {
         return _minutes;
     }
 };
 
 
-struct Date {
+class Date {
 private:
     unsigned int _day;
     unsigned int _month;
     unsigned int _year;
 
-    void CheckMonth(int month)
+    unsigned int checkMonth(const unsigned int month)
     {
         const int MAX_MONTH = 12;
         const int MIN_MONTH = 1;
@@ -69,86 +67,118 @@ private:
         }
     }
 
-    void CheckDay(int day, int end) {
+    unsigned int checkDay(const unsigned int day, const unsigned int end) {
         if (day > end || day < DAYS::BEGIN_DAY) {
             throw ErrorType::DayError;
         }
+        return day;
+    }
+
+    //TODO: Добавить проверку на больше текущего года
+    unsigned int checkYear(const unsigned int year) {
+        // if () {
+        //     throw ErrorType::YearError;
+        // }
+        return year;
     }
 
 public:
-    void Init(int day, int month, int year) {
-        CheckMonth(month);
-
+    Date(const unsigned int day = 1, const unsigned int month = 1, const unsigned int year = 1) {
+        _month = checkMonth(month);
+        _year = checkYear(year);
         switch (month) {
-        case 1:
-            CheckDay(day, DAYS::END_DAY_31);
-            break;
-        case 2:
-            CheckDay(day, DAYS::END_DAY_28);
-            break;
-        case 3:
-            CheckDay(day, DAYS::END_DAY_31);
-            break;
-        case 4:
-            CheckDay(day, DAYS::END_DAY_30);
-            break;
-        case 5:
-            CheckDay(day, DAYS::END_DAY_31);
-            break;
-        case 6:
-            CheckDay(day, DAYS::END_DAY_30);
-            break;
-        case 7:
-            CheckDay(day, DAYS::END_DAY_31);
-            break;
-        case 8:
-            CheckDay(day, DAYS::END_DAY_31);
-            break;
-        case 9:
-            CheckDay(day, DAYS::END_DAY_30);
-            break;
-        case 10:
-            CheckDay(day, DAYS::END_DAY_31);
-            break;
-        case 11:
-            CheckDay(day, DAYS::END_DAY_30);
-            break;
-        case 12:
-            CheckDay(day, DAYS::END_DAY_31);
-            break;
+            case 1:
+                _day = checkDay(day, DAYS::END_DAY_31);
+                break;
+            case 2:
+                _day = checkDay(day, DAYS::END_DAY_28);
+                break;
+            case 3:
+                _day = checkDay(day, DAYS::END_DAY_31);
+                break;
+            case 4:
+                _day = checkDay(day, DAYS::END_DAY_30);
+                break;
+            case 5:
+                _day = checkDay(day, DAYS::END_DAY_31);
+                break;
+            case 6:
+                _day = checkDay(day, DAYS::END_DAY_30);
+                break;
+            case 7:
+                _day = checkDay(day, DAYS::END_DAY_31);
+                break;
+            case 8:
+                _day = checkDay(day, DAYS::END_DAY_31);
+                break;
+            case 9:
+                _day = checkDay(day, DAYS::END_DAY_30);
+                break;
+            case 10:
+                _day = checkDay(day, DAYS::END_DAY_31);
+                break;
+            case 11:
+                _day = checkDay(day, DAYS::END_DAY_30);
+                break;
+            case 12:
+                _day = checkDay(day, DAYS::END_DAY_31);
+                break;
+            default:
+                throw ErrorType::DayError;
         }
-
-        _day = day;
-        _month = month;
-        _year = year;
-
     }
 
-    int GetDay() {
+    unsigned int getDay() const {
         return _day;
     }
 
-    int GetMonth() {
+    unsigned int getMonth() {
         return _month;
     }
 
-    int GetYear() {
+    unsigned int getYear() {
         return _year;
     }
 };
-// СТРУКТУРА КОТОРАЯ ХРАНИТ ДАТУ И ТО ЧТО НАДО СДЕЛАТЬ В ЭТУ ДАТУ
-struct Reminder
+
+// КЛАСС КОТОРЫЙ ХРАНИТ ДАТУ И ТО ЧТО НАДО СДЕЛАТЬ В ЭТУ ДАТУ
+class Reminder
+{
+private:
+    string _reminder;
+    Date* _date;
+    Time* _time;
+public:
+    Reminder(const string& reminder, Date *date, Time *time)
+        : _reminder(reminder),
+          _date(date),
+          _time(time) {
+    }
+
+    ~Reminder() {
+        delete _date;
+        delete _time;
+    }
+
+    string getReminder() const {
+        return _reminder;
+    }
+
+    Date getDate() const {
+        return *_date;
+    }
+
+    Time getTime() const {
+        return *_time;
+    }
+};
+
+// ЗАПИСЫВАЕТ НАПОМИНАНИЕ
+Reminder addReminderbookmark()
 {
     string reminder;
-    Date date;
-    Time time;
-};
-// ЗАПИСЫВАЕТ НАПОМИНАНИЕ
-Reminder add_reminderbookmark()
-{
-    Reminder result;
     cout << "Введите напоминание: ";
-    getline(cin, result.reminder);
+    getline(cin, reminder);
     bool repeat;
 
     do {
@@ -158,61 +188,59 @@ Reminder add_reminderbookmark()
         string temp_input;
         cout << "Введите час: ";
         getline(cin, temp_input);
-        int hour = stoi(temp_input);
+        const int hour = stoi(temp_input);
 
         cout << "Введите минуты: ";
         getline(cin, temp_input);
-        int minutes = stoi(temp_input);
+        const int minutes = stoi(temp_input);
 
         cout << "Введите год: ";
         getline(cin, temp_input);
-        int year = stoi(temp_input);
+        const int year = stoi(temp_input);
 
         cout << "Введите месяц: ";
         getline(cin, temp_input);
-        int month = stoi(temp_input);
+        const int month = stoi(temp_input);
 
         cout << "Введите день: ";
         getline(cin, temp_input);
-        int day = stoi(temp_input);
+        const int day = stoi(temp_input);
 
         try {
-
-            
-            result.time.Init(hour, minutes);
-            result.date.Init(day, month, year);
-            
+            const auto reminderTime = new Time(hour, minutes);
+            const auto reminderDate = new Date(day, month, year);
+            Reminder result(reminder, reminderDate, reminderTime);
             cout << "Дата запомнена." << endl;
+            return result;
         }
         catch (ErrorType error) {
             switch (error) {
-            case ErrorType::HourError:
-                cerr << "Неверный час" << endl;
-                break;
-            case ErrorType::MinutesError:
-                cerr << "Неверный менута" << endl;
-                break;
-            case ErrorType::MonthError:
-                cerr << "Неверный месяц" << endl;
-                break;
-            case ErrorType::DayError:
-                cerr << "Неверный день" << endl;
-                break;
+                case ErrorType::HourError:
+                    cerr << "Неверный час" << endl;
+                    break;
+                case ErrorType::MinutesError:
+                    cerr << "Неверный менута" << endl;
+                    break;
+                case ErrorType::MonthError:
+                    cerr << "Неверный месяц" << endl;
+                    break;
+                case ErrorType::DayError:
+                    cerr << "Неверный день" << endl;
+                    break;
+                default: ;
             }
             repeat = true;
         }
     } while (repeat);
-
-    return result;
 }
 // ВЫВОДИТ СПИСОК НАПОМИНАНИЙ
-void print_list(vector<Reminder>& bookmarks)
+void print_list(const vector<Reminder>& bookmarks)
 {
     for (int i = 0; i < bookmarks.size(); i++)
     {
-        cout << i << ": ( Напоминание: " << bookmarks[i].reminder << 
-        "; Время: "<< bookmarks[i].time.GetHour()<<":"<< bookmarks[i].time.GetMinutes()<<
-        " Дата: " << bookmarks[i].date.GetDay() << "." << bookmarks[i].date.GetMonth() << "." << bookmarks[i].date.GetYear() << " )" << endl;
+        cout << i << ": ( Напоминание: " << bookmarks[i].getReminder() <<
+        "; Время: "<< bookmarks[i].getTime().getHour()<<":"<< bookmarks[i].getTime().getMinutes()<<
+        " Дата: " << bookmarks[i].getDate().getDay() << "." << bookmarks[i].getDate().getMonth() << "." << bookmarks[i].getDate().getYear() << " )" << endl;
     }
 }
 // УДАЛЯЕТ ЯЧЕЙКИ
@@ -220,10 +248,9 @@ void delete_reminder(vector<Reminder>& bookmarks)
 {
     string delete_index;
     string request;
-    int request_int;
     cout << "Введите номер напоминания: ";
     getline(cin, delete_index);
-    request_int = stoi(delete_index);
+    int request_int = stoi(delete_index);
     if (request_int >= bookmarks.size() or request_int < 0)
     {
         cout << "Вы ввели индекс больше или меньше размера массива" << endl;
@@ -231,16 +258,12 @@ void delete_reminder(vector<Reminder>& bookmarks)
         return;
     }
     bookmarks.erase(bookmarks.begin() + stoi(delete_index));
-    cout << "Удаление выполнино" << endl;
-
-    return;
+    cout << "Удаление выполнено" << endl;
 }
 
 int main()
 {
     system("chcp 1251");
-
-    Reminder reminder;
     string request;
     vector<Reminder> list_reminder;
     do
@@ -249,7 +272,7 @@ int main()
         getline(cin, request);
         if (request == "1")
         {
-            reminder = add_reminderbookmark();
+            Reminder reminder = addReminderbookmark();
             list_reminder.push_back(reminder);
         }
         else if (request == "2")
