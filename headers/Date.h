@@ -2,11 +2,9 @@
 #define REMINDERAPP_MAIN_DATE_H
 
 #include <iostream>
+#include <chrono>
+#include "ErrorTypes.h"
 
-using namespace std;
-enum ErrorType {
-    YearError, MonthError, DayError, HourError, MinutesError
-};
 enum DAYS {
     BEGIN_DAY = 1, END_DAY_28 = 28, END_DAY_30 = 30, END_DAY_31 = 31
 };
@@ -17,32 +15,36 @@ private:
     unsigned int _month;
     unsigned int _year;
 
-    unsigned int checkMonth(const unsigned int month)
+    static unsigned int checkMonth(const unsigned int month)
     {
         const int MAX_MONTH = 12;
         const int MIN_MONTH = 1;
         if (month > MAX_MONTH || month < MIN_MONTH) {
             throw ErrorType::MonthError;
         }
+        return month;
     }
 
-    unsigned int checkDay(const unsigned int day, const unsigned int end) {
+    static unsigned int checkDay(const unsigned int day, const unsigned int end) {
         if (day > end || day < DAYS::BEGIN_DAY) {
             throw ErrorType::DayError;
         }
         return day;
     }
 
-    //TODO: Добавить проверку на больше текущего года
-    unsigned int checkYear(const unsigned int year) {
-        // if () {
-        //     throw ErrorType::YearError;
-        // }
+    static unsigned int checkYear(const unsigned int year) {
+        const auto now = std::chrono::system_clock::now();
+        const auto time = std::chrono::system_clock::to_time_t(now);
+        const auto time_local = localtime(&time);
+        constexpr int TM_YEAR_BEGIN = 1900;
+        if (time_local->tm_year + TM_YEAR_BEGIN < year) {
+            throw ErrorType::YearError;
+        }
         return year;
     }
 
 public:
-    Date(const unsigned int day = 1, const unsigned int month = 1, const unsigned int year = 1) {
+    explicit Date(const unsigned int day = 1, const unsigned int month = 1, const unsigned int year = 1) {
         _month = checkMonth(month);
         _year = checkYear(year);
         switch (month) {
@@ -87,15 +89,15 @@ public:
         }
     }
 
-    unsigned int getDay() const {
+    [[nodiscard]] unsigned int getDay() const {
         return _day;
     }
 
-    unsigned int getMonth() {
+    [[nodiscard]] unsigned int getMonth() const {
         return _month;
     }
 
-    unsigned int getYear() {
+    [[nodiscard]] unsigned int getYear() const {
         return _year;
     }
 };

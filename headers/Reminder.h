@@ -2,18 +2,19 @@
 #define REMINDERAPP_MAIN_REMINDER_H
 #include <iostream>
 #include <string>
+#include <utility>
 #include "Date.h"
 #include "Time.h"
 
 class Reminder {
 private:
-    string _reminder;
+    std::string _reminder;
     Date *_date;
     Time *_time;
 
 public:
-    Reminder(const string &reminder, Date *date, Time *time)
-        : _reminder(reminder),
+    Reminder(std::string reminder, Date *date, Time *time)
+        : _reminder(std::move(reminder)),
           _date(date),
           _time(time) {
     }
@@ -23,15 +24,15 @@ public:
         delete _time;
     }
 
-    string getReminder() const {
+    [[nodiscard]] std::string getReminder() const {
         return _reminder;
     }
 
-    Date getDate() const {
+    [[nodiscard]] Date getDate() const {
         return *_date;
     }
 
-    Time getTime() const {
+    [[nodiscard]] Time getTime() const {
         return *_time;
     }
 };

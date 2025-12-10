@@ -1,12 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <ctime>
-#include "Date.h"
-#include "Time.h"
-#include "Reminder.h"
-using namespace std;
+#include "headers/Date.h"
+#include "headers/Time.h"
+#include "headers/Reminder.h"
 
+using namespace std;
 
 // ЗАПИСЫВАЕТ НАПОМИНАНИЕ
 Reminder addReminderbookmark() {
@@ -52,7 +51,7 @@ Reminder addReminderbookmark() {
                     cerr << "Неверный час" << endl;
                     break;
                 case ErrorType::MinutesError:
-                    cerr << "Неверный менута" << endl;
+                    cerr << "Неверная минута" << endl;
                     break;
                 case ErrorType::MonthError:
                     cerr << "Неверный месяц" << endl;
@@ -94,7 +93,7 @@ void delete_reminder(vector<Reminder> &bookmarks) {
 }
 
 int main() {
-    system("chcp 1251");
+    setlocale(LC_ALL, "Russian");
     string request;
     vector<Reminder> list_reminder;
     do {
