@@ -37,7 +37,8 @@ private:
         const auto time = std::chrono::system_clock::to_time_t(now);
         const auto time_local = localtime(&time);
         constexpr int TM_YEAR_BEGIN = 1900;
-        if (time_local->tm_year + TM_YEAR_BEGIN < year) {
+        std::cout << time_local->tm_year + TM_YEAR_BEGIN << std::endl;
+        if (time_local->tm_year + TM_YEAR_BEGIN > year) {
             throw ErrorType::YearError;
         }
         return year;
