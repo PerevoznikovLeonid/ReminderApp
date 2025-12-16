@@ -8,10 +8,10 @@
 
 using namespace std;
 
-// ЗАПИСЫВАЕТ НАПОМИНАНИЕ
+// adding a reminder
 Reminder addReminderbookmark() {
     string reminder;
-    cout << "Введите напоминание: ";
+    cout << "set a reminder: ";
     getline(cin, reminder);
     bool repeat;
 
@@ -20,23 +20,23 @@ Reminder addReminderbookmark() {
 
 
         string temp_input;
-        cout << "Введите час: ";
+        cout << "enter the hour: ";
         getline(cin, temp_input);
         const int hour = stoi(temp_input);
 
-        cout << "Введите минуты: ";
+        cout << "enter the minutes: ";
         getline(cin, temp_input);
         const int minutes = stoi(temp_input);
 
-        cout << "Введите год: ";
+        cout << "enter the year: ";
         getline(cin, temp_input);
         const int year = stoi(temp_input);
 
-        cout << "Введите месяц: ";
+        cout << "enter the month: ";
         getline(cin, temp_input);
         const int month = stoi(temp_input);
 
-        cout << "Введите день: ";
+        cout << "enter the day: ";
         getline(cin, temp_input);
         const int day = stoi(temp_input);
 
@@ -44,57 +44,57 @@ Reminder addReminderbookmark() {
             const auto reminderTime = new Time(hour, minutes);
             const auto reminderDate = new Date(day, month, year);
             Reminder result(reminder, reminderDate, reminderTime);
-            cout << "Дата запомнена." << endl;
+            cout << "reminder remembered." << endl;
             return result;
         } catch (ErrorType error) {
             switch (error) {
                 case ErrorType::HourError:
-                    cerr << "Неверный час" << endl;
+                    cerr << "wrong hour" << endl;
                     break;
                 case ErrorType::MinutesError:
-                    cerr << "Неверная минута" << endl;
+                    cerr << "incorrect minutes" << endl;
                     break;
                 case ErrorType::MonthError:
-                    cerr << "Неверный месяц" << endl;
+                    cerr << "wrong month" << endl;
                     break;
                 case ErrorType::DayError:
-                    cerr << "Неверный день" << endl;
+                    cerr << "wrong day" << endl;
                     break;
                 case ErrorType::YearError:
-                    cerr << "Неверный год" << endl;
+                    cerr << "wrong year" << endl;
                     break;
                 default:
-                    cerr << "Неизвестная ошибка";
+                    cerr << "unknown error";
             }
             repeat = true;
         }
     } while (repeat);
 }
 
-// ВЫВОДИТ СПИСОК НАПОМИНАНИЙ
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 void print_list(const vector<Reminder> &bookmarks) {
     for (int i = 0; i < bookmarks.size(); i++) {
-        cout << i << ": ( Напоминание: " << bookmarks[i].getReminder() <<
-                "; Время: " << bookmarks[i].getTime().getHour() << ":" << bookmarks[i].getTime().getMinutes() <<
-                " Дата: " << bookmarks[i].getDate().getDay() << "." << bookmarks[i].getDate().getMonth() << "." <<
+        cout << i << ": ( Reminder: " << bookmarks[i].getReminder() <<
+                "; Time: " << bookmarks[i].getTime().getHour() << ":" << bookmarks[i].getTime().getMinutes() <<
+                " Date: " << bookmarks[i].getDate().getDay() << "." << bookmarks[i].getDate().getMonth() << "." <<
                 bookmarks[i].getDate().getYear() << " )" << endl;
     }
 }
 
-// УДАЛЯЕТ ЯЧЕЙКИ
+// deleting reminders
 void delete_reminder(vector<Reminder> &bookmarks) {
     string delete_index;
     string request;
-    cout << "Введите номер напоминания: ";
+    cout << "What number do you want to delete under?: ";
     getline(cin, delete_index);
     int request_int = stoi(delete_index);
     if (request_int >= bookmarks.size() or request_int < 0) {
-        cout << "Вы ввели индекс больше или меньше размера массива" << endl;
+        cout << "you entered a non-existent index" << endl;
 
         return;
     }
     bookmarks.erase(bookmarks.begin() + stoi(delete_index));
-    cout << "Удаление выполнено" << endl;
+    cout << "the removal is completed" << endl;
 }
 
 int main() {
@@ -104,8 +104,8 @@ int main() {
     vector<Reminder> list_reminder;
     while (request != "exit") {
         cout <<
-                "Хотите добавить напоминание?\n"
-                "exit-выход|add-добавить напоминание|view-посмотреть список напоминаний|del-удалить напоминание"
+                "what do you want to do?\n"
+                "exit-exit the program|add-add a reminder|view-display a list of reminders|del-delete reminder"
                 << endl;
         getline(cin, request);
         if (request == "add") {
