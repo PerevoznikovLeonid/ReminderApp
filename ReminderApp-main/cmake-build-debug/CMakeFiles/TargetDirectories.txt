@@ -1,0 +1,3 @@
+C:/Users/Demon659/Desktop/ReminderApp-main/cmake-build-debug/CMakeFiles/ReminderApp.dir
+C:/Users/Demon659/Desktop/ReminderApp-main/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Demon659/Desktop/ReminderApp-main/cmake-build-debug/CMakeFiles/rebuild_cache.dir
