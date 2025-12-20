@@ -71,7 +71,7 @@ Reminder addReminderbookmark() {
     } while (repeat);
 }
 
-// ������� ������ �����������
+// prints the entire list
 void print_list(const vector<Reminder> &bookmarks) {
     for (int i = 0; i < bookmarks.size(); i++) {
         cout << i << ": ( Reminder: " << bookmarks[i].getReminder() <<
