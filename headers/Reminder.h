@@ -7,7 +7,6 @@
 #include "Time.h"
 
 class Reminder {
-private:
     std::string _reminder;
     Date *_date;
     Time *_time;
@@ -17,6 +16,24 @@ public:
         : _reminder(std::move(reminder)),
           _date(date),
           _time(time) {
+    }
+
+    Reminder(const Reminder& other) {
+        _reminder = other._reminder;
+        _date = new Date(*other._date);
+        _time = new Time(*other._time);
+    }
+
+    Reminder& operator=(const Reminder& other) {
+        if (this != &other) {
+            delete _date;
+            delete _time;
+
+            _reminder = other._reminder;
+            _date = new Date(*other._date);
+            _time = new Time(*other._time);
+        }
+        return *this;
     }
 
     ~Reminder() {

@@ -10,7 +10,6 @@ enum DAYS {
 };
 
 class Date {
-private:
     unsigned int _day;
     unsigned int _month;
     unsigned int _year;
@@ -37,7 +36,6 @@ private:
         const auto time = std::chrono::system_clock::to_time_t(now);
         const auto time_local = localtime(&time);
         constexpr int TM_YEAR_BEGIN = 1900;
-        std::cout << time_local->tm_year + TM_YEAR_BEGIN << std::endl;
         if (time_local->tm_year + TM_YEAR_BEGIN > year) {
             throw ErrorType::YearError;
         }
@@ -100,6 +98,10 @@ public:
 
     [[nodiscard]] unsigned int getYear() const {
         return _year;
+    }
+
+    bool operator==(const Date& other) const {
+        return _day == other._day && _month == other._month && _year == other._year;
     }
 };
 

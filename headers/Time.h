@@ -40,6 +40,10 @@ public:
     [[nodiscard]] unsigned int getMinutes() const {
         return _minutes;
     }
+
+    bool operator==(const Time& other) const {
+        return _hour == other._hour && _minutes == other._minutes;
+    }
 };
 
 
