@@ -11,30 +11,30 @@ using namespace std;
 // adding a reminder
 Reminder addReminderbookmark() {
     string reminder;
-    cout << "Set a reminder:";
+    cout << "Set a reminder:" << endl;
     getline(cin, reminder);
     bool repeat;
     do {
         repeat = false;
 
         string temp_input;
-        cout << "Enter the hour:";
+        cout << "Enter the hour:" << endl;
         getline(cin, temp_input);
         const int hour = stoi(temp_input);
 
-        cout << "Enter the minutes:";
+        cout << "Enter the minutes:" << endl;
         getline(cin, temp_input);
         const int minutes = stoi(temp_input);
 
-        cout << "Enter the year:";
+        cout << "Enter the year:" << endl;
         getline(cin, temp_input);
         const int year = stoi(temp_input);
 
-        cout << "Enter the month:";
+        cout << "Enter the month:" << endl;
         getline(cin, temp_input);
         const int month = stoi(temp_input);
 
-        cout << "Enter the day:";
+        cout << "Enter the day:" << endl;
         getline(cin, temp_input);
         const int day = stoi(temp_input);
 
@@ -44,28 +44,49 @@ Reminder addReminderbookmark() {
                 new Time(hour, minutes));
             cout << "Reminder added." << endl;
             return result;
-        } catch (ErrorType error) {
-            switch (error) {
-                case ErrorType::HourError:
-                    cerr << "Invalid hour." << endl;
-                    break;
-                case ErrorType::MinutesError:
-                    cerr << "Invalid minutes." << endl;
-                    break;
-                case ErrorType::MonthError:
-                    cerr << "Invalid month." << endl;
-                    break;
-                case ErrorType::DayError:
-                    cerr << "Invalid day." << endl;
-                    break;
-                case ErrorType::YearError:
-                    cerr << "Invalid year." << endl;
-                    break;
-                default:
-                    cerr << "Unknown error.";
-            }
+        }
+        catch (errors::HourError error) {
+            cerr << error.what() << endl;
             repeat = true;
         }
+        catch (errors::MinutesError error) {
+            cerr << error.what() << endl;
+            repeat = true;
+        }
+        catch (errors::YearError error) {
+            cerr << error.what() << endl;
+            repeat = true;
+        }
+        catch (errors::MonthError error) {
+            cerr << error.what() << endl;
+            repeat = true;
+        }
+        catch (errors::DayError error) {
+            cerr << error.what() << endl;
+            repeat = true;
+        }
+        // catch (ErrorType error) {
+        //     switch (error) {
+        //         case ErrorType::HourError:
+        //             cerr << "Invalid hour." << endl;
+        //             break;
+        //         case ErrorType::MinutesError:
+        //             cerr << "Invalid minutes." << endl;
+        //             break;
+        //         case ErrorType::MonthError:
+        //             cerr << "Invalid month." << endl;
+        //             break;
+        //         case ErrorType::DayError:
+        //             cerr << "Invalid day." << endl;
+        //             break;
+        //         case ErrorType::YearError:
+        //             cerr << "Invalid year." << endl;
+        //             break;
+        //         default:
+        //             cerr << "Unknown error.";
+        //     }
+        //     repeat = true;
+        // }
     } while (repeat);
 }
 

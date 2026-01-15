@@ -1,7 +1,6 @@
 #ifndef REMINDERAPP_MAIN_TIME_H
 #define REMINDERAPP_MAIN_TIME_H
 
-#include <ctime>
 #include "ErrorTypes.h"
 
 enum Times {
@@ -15,14 +14,14 @@ private:
 
     static unsigned int checkHour(const unsigned int hour) {
         if (hour > Times::END_HOUR) {
-            throw ErrorType::HourError;
+            throw errors::HourError("Invalid hour.");
         }
         return hour;
     }
 
     static unsigned int checkMinutes(const unsigned int minutes) {
         if (minutes > Times::END_MINUTES) {
-            throw ErrorType::MinutesError;
+            throw errors::MinutesError("Invalid minutes.");
         }
         return minutes;
     }

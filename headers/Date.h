@@ -1,7 +1,6 @@
 #ifndef REMINDERAPP_MAIN_DATE_H
 #define REMINDERAPP_MAIN_DATE_H
 
-#include <iostream>
 #include <chrono>
 #include "ErrorTypes.h"
 
@@ -16,17 +15,17 @@ class Date {
 
     static unsigned int checkMonth(const unsigned int month)
     {
-        const int MAX_MONTH = 12;
-        const int MIN_MONTH = 1;
+        constexpr int MAX_MONTH = 12;
+        constexpr int MIN_MONTH = 1;
         if (month > MAX_MONTH || month < MIN_MONTH) {
-            throw ErrorType::MonthError;
+            throw errors::MonthError("Invalid month.");
         }
         return month;
     }
 
     static unsigned int checkDay(const unsigned int day, const unsigned int end) {
         if (day > end || day < DAYS::BEGIN_DAY) {
-            throw ErrorType::DayError;
+            throw errors::DayError("Invalid day.");
         }
         return day;
     }
@@ -37,7 +36,7 @@ class Date {
         const auto time_local = localtime(&time);
         constexpr int TM_YEAR_BEGIN = 1900;
         if (time_local->tm_year + TM_YEAR_BEGIN > year) {
-            throw ErrorType::YearError;
+            throw errors::YearError("Invalid Year");
         }
         return year;
     }
@@ -84,7 +83,7 @@ public:
                 _day = checkDay(day, DAYS::END_DAY_31);
                 break;
             default:
-                throw ErrorType::DayError;
+                throw errors::DayError("Invalid Day.");
         }
     }
 
