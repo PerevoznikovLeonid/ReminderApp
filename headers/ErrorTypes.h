@@ -14,8 +14,6 @@ namespace errors {
         ~ProgramError() noexcept override = default;
     };
 
-
-
     class DateError : public ProgramError {
     public:
         explicit DateError(const std::string& message)
@@ -81,9 +79,5 @@ namespace errors {
         ~MinutesError() noexcept override = default;
     };
 }
-
-// enum ErrorType {
-//     YearError, MonthError, DayError, HourError, MinutesError
-// };
 
 #endif //REMINDERAPP_ERRORTYPES_H

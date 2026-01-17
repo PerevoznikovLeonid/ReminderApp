@@ -65,28 +65,6 @@ Reminder addReminderbookmark() {
             cerr << error.what() << endl;
             repeat = true;
         }
-        // catch (ErrorType error) {
-        //     switch (error) {
-        //         case ErrorType::HourError:
-        //             cerr << "Invalid hour." << endl;
-        //             break;
-        //         case ErrorType::MinutesError:
-        //             cerr << "Invalid minutes." << endl;
-        //             break;
-        //         case ErrorType::MonthError:
-        //             cerr << "Invalid month." << endl;
-        //             break;
-        //         case ErrorType::DayError:
-        //             cerr << "Invalid day." << endl;
-        //             break;
-        //         case ErrorType::YearError:
-        //             cerr << "Invalid year." << endl;
-        //             break;
-        //         default:
-        //             cerr << "Unknown error.";
-        //     }
-        //     repeat = true;
-        // }
     } while (repeat);
 }
 
@@ -182,6 +160,7 @@ int main() {
     reminderThread.detach();
 
     while (request != "exit") {
+
         cout <<
                 "What do you want to do?\n"
                 "exit - exit the program | add - add a reminder | view - display a list of reminders | del - delete reminder"
