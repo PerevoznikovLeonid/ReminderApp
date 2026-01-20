@@ -78,6 +78,17 @@ namespace errors {
 
         ~MinutesError() noexcept override = default;
     };
+
+    class FileError : public ProgramError {
+    public:
+        explicit FileError(const std::string& message)
+          : ProgramError(message) {
+        }
+
+        ~FileError() noexcept override = default;
+
+    };
+
 }
 
 #endif //REMINDERAPP_ERRORTYPES_H
