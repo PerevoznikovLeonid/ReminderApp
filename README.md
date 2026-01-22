@@ -14,14 +14,7 @@
 ## Диаграмма классов
 ``` mermaid
 classDiagram
-    class ErrorType {
-        <<enumeration>>
-        +YearError
-        +MonthError
-        +DayError
-        +HourError
-        +MinutesError
-    }
+
     
     class DAYS {
         <<enumeration>>
@@ -70,9 +63,61 @@ classDiagram
         +getDate() Date
         +getTime() Time
     }
-    
-    Date ..|> ErrorType 
-    Time ..|> ErrorType 
-    Reminder *-- Date 
-    Reminder *-- Time
+
+
+    class ProgramError {
+        <<exception>>
+        +what() std::string
+    }
+
+    class DateError {
+        <<exception>>
+    }
+
+    class TimeError {
+        <<exception>>
+    }
+
+    class YearError {
+        <<exception>>
+    }
+
+    class MonthError {
+        <<exception>>
+    }
+
+    class DayError {
+        <<exception>>
+    }
+
+    class HourError {
+        <<exception>>
+    }
+
+    class MinutesError {
+        <<exception>>
+    }
+    class FileError {
+        <<exception>>
+    }
+    class IndexError {
+        <<exception>>
+    }
+
+    ProgramError <|-- IndexError
+    ProgramError <|-- FileError
+
+    ProgramError <|-- DateError
+    ProgramError <|-- TimeError
+
+    DateError <|-- YearError
+    DateError <|-- MonthError
+    DateError <|-- DayError
+
+    TimeError <|-- HourError
+    TimeError <|-- MinutesError
+
+    Reminder --> Date 
+    Reminder --> Time 
 ```
+
