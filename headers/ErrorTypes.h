@@ -88,6 +88,17 @@ namespace errors {
         ~FileError() noexcept override = default;
 
     };
+    class IndexError : public ProgramError {
+    public:
+        explicit IndexError(const std::string& message)
+          : ProgramError(message) {
+        }
+
+        ~IndexError() noexcept override = default;
+
+    };
+
+
 
 }
 

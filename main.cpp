@@ -210,7 +210,7 @@ void delete_reminder(vector<Reminder> &bookmarks) {
     int request_int;
     try {
         request_int = stoi(delete_index);
-    } catch (...) {
+    } catch (errors::IndexError& error) {
         cout << "Invalid number." << endl;
         return;
     }
