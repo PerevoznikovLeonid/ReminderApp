@@ -23,15 +23,6 @@ namespace errors {
         ~DateError() noexcept override = default;
     };
 
-    class YearError : public DateError {
-    public:
-        explicit YearError(const std::string& message)
-          : DateError(message) {
-        }
-
-        ~YearError() noexcept override = default;
-    };
-
     class MonthError : public DateError {
     public:
         explicit MonthError(const std::string& message)
@@ -50,7 +41,14 @@ namespace errors {
         ~DayError() noexcept override = default;
     };
 
+    class PassedDateTimeError : public DateError {
+    public:
+        explicit PassedDateTimeError(const std::string& message)
+          : DateError(message) {
+        }
 
+        ~PassedDateTimeError() noexcept override = default;
+    };
 
     class TimeError : public ProgramError {
     public:
@@ -86,8 +84,8 @@ namespace errors {
         }
 
         ~FileError() noexcept override = default;
-
     };
+
     class IndexError : public ProgramError {
     public:
         explicit IndexError(const std::string& message)
@@ -95,10 +93,7 @@ namespace errors {
         }
 
         ~IndexError() noexcept override = default;
-
     };
-
-
 
 }
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ranges>
 #include <vector>
 #include <string>
 #include <thread>
@@ -10,15 +11,17 @@
 using namespace std;
 const string TXT_FILE = "reminders.txt";
 
-// Function to save list to text file
+// Сохраняет список в текстовый файл
 void saveToTxt(const vector<Reminder>& list_reminder) {
     ofstream file(TXT_FILE);
-    if (!file.is_open()) {
-        cout << "Error creating file " << TXT_FILE << endl;
-        return;
+    try {
+        if (!file.is_open()) {
+            throw errors::FileError("Error opening file");
+        }
     }
-
-    cout << "Saving " << list_reminder.size() << " reminders to " << TXT_FILE << endl;
+    catch (const errors::FileError& error) {
+        cerr << error.what() << endl;
+    }
 
     for (int i = 0; i < list_reminder.size(); i++) {
         file << "id:" << i << " reminder:\""
@@ -30,32 +33,27 @@ void saveToTxt(const vector<Reminder>& list_reminder) {
              << list_reminder[i].getTime().getMinutes() << endl;
     }
     file.close();
-    cout << "List saved to " << TXT_FILE << endl;
 }
 
-// Function to load list from text file
+// Загружает список из текстового файла
 void loadFromTxt(vector<Reminder>& list_reminder) {
     ifstream file(TXT_FILE);
     if (!file.is_open()) {
-        cout << "File " << TXT_FILE << " not found, starting with empty list." << endl;
         return;
     }
 
     list_reminder.clear();
     string line;
-    int loaded_count = 0;
 
     while (getline(file, line)) {
         if (line.empty()) continue;
 
-        cout << "Parsing line: " << line << endl;  // Debug info
-
-        // Найти reminder (между reminder:"..." )
+        // Найти reminder
         size_t rem_start = line.find("reminder:\"");
         if (rem_start == string::npos) continue;
-        rem_start += 10;  // пропустить "reminder:"
+        rem_start += 10;
 
-        size_t rem_end = line.find("\"", rem_start);
+        size_t rem_end = line.find('\"', rem_start);
         if (rem_end == string::npos) continue;
 
         string reminder_text = line.substr(rem_start, rem_end - rem_start);
@@ -65,7 +63,7 @@ void loadFromTxt(vector<Reminder>& list_reminder) {
         if (day_start == string::npos) continue;
         day_start += 4;
 
-        size_t day_end = line.find(" ", day_start);
+        size_t day_end = line.find(' ', day_start);
         if (day_end == string::npos) day_end = line.find("month:", day_start);
         string day_str = line.substr(day_start, day_end - day_start);
 
@@ -74,7 +72,7 @@ void loadFromTxt(vector<Reminder>& list_reminder) {
         if (month_start == string::npos) continue;
         month_start += 6;
 
-        size_t month_end = line.find(" ", month_start);
+        size_t month_end = line.find(' ', month_start);
         if (month_end == string::npos) month_end = line.find("year:", month_start);
         string month_str = line.substr(month_start, month_end - month_start);
 
@@ -83,7 +81,7 @@ void loadFromTxt(vector<Reminder>& list_reminder) {
         if (year_start == string::npos) continue;
         year_start += 5;
 
-        size_t year_end = line.find(" ", year_start);
+        size_t year_end = line.find(' ', year_start);
         if (year_end == string::npos) year_end = line.find("hour:", year_start);
         string year_str = line.substr(year_start, year_end - year_start);
 
@@ -92,7 +90,7 @@ void loadFromTxt(vector<Reminder>& list_reminder) {
         if (hour_start == string::npos) continue;
         hour_start += 5;
 
-        size_t hour_end = line.find(" ", hour_start);
+        size_t hour_end = line.find(' ', hour_start);
         if (hour_end == string::npos) hour_end = line.find("minutes:", hour_start);
         string hour_str = line.substr(hour_start, hour_end - hour_start);
 
@@ -103,25 +101,20 @@ void loadFromTxt(vector<Reminder>& list_reminder) {
 
         string min_str = line.substr(min_start);
 
-        try {
-            int day = stoi(day_str);
-            int month = stoi(month_str);
-            int year = stoi(year_str);
-            int hour = stoi(hour_str);
-            int minutes = stoi(min_str);
+        int day = stoi(day_str);
+        int month = stoi(month_str);
+        int year = stoi(year_str);
+        int hour = stoi(hour_str);
+        int minutes = stoi(min_str);
 
-            Reminder new_rem(reminder_text, new Date(day, month, year), new Time(hour, minutes));
-            list_reminder.push_back(new_rem);
-            loaded_count++;
-        } catch (errors::FileError& error) {
-            cerr << error.what() << endl;
-        }
+        Reminder new_rem(reminder_text, new Date(day, month, year), new Time(hour, minutes));
+        list_reminder.push_back(new_rem);
     }
     file.close();
-    cout << "List loaded from " << TXT_FILE << " (" << loaded_count << " reminders)" << endl;
 }
 
-Reminder addReminderbookmark(vector<Reminder>& list_reminder) {
+// Добавляет напоминание в список
+Reminder addReminder(vector<Reminder>& list_reminder) {
     string reminder;
     cout << "Set a reminder:" << endl;
     getline(cin, reminder);
@@ -130,13 +123,6 @@ Reminder addReminderbookmark(vector<Reminder>& list_reminder) {
         repeat = false;
 
         string temp_input;
-        cout << "Enter the hour:" << endl;
-        getline(cin, temp_input);
-        const int hour = stoi(temp_input);
-
-        cout << "Enter the minutes:" << endl;
-        getline(cin, temp_input);
-        const int minutes = stoi(temp_input);
 
         cout << "Enter the year:" << endl;
         getline(cin, temp_input);
@@ -150,10 +136,32 @@ Reminder addReminderbookmark(vector<Reminder>& list_reminder) {
         getline(cin, temp_input);
         const int day = stoi(temp_input);
 
+        cout << "Enter the hour:" << endl;
+        getline(cin, temp_input);
+        const int hour = stoi(temp_input);
+
+        cout << "Enter the minutes:" << endl;
+        getline(cin, temp_input);
+        const int minutes = stoi(temp_input);
+
         try {
+            // Проверка на то, прошла ли дата
+            const auto now = std::chrono::system_clock::now();
+            const auto time = std::chrono::system_clock::to_time_t(now);
+            const auto time_local = *localtime(&time);
+
+            constexpr int TM_YEAR_BEGIN = 1900;
+            constexpr int TM_MONTH_BEGIN = 1;
+            if (time_local.tm_mday > day || time_local.tm_mon > month + TM_MONTH_BEGIN || time_local.tm_year + TM_YEAR_BEGIN > year) {
+                throw errors::PassedDateTimeError("Date has already passed.");
+            }
+            if (time_local.tm_hour > hour || time_local.tm_min > minutes) {
+                throw errors::PassedDateTimeError("Time has already passed.");
+            }
+
             Reminder result(reminder, new Date(day, month, year), new Time(hour, minutes));
-            cout << "Reminder added." << endl;
             list_reminder.push_back(result);
+            cout << "Reminder added." << endl;
             saveToTxt(list_reminder);
             return result;
         }
@@ -165,10 +173,6 @@ Reminder addReminderbookmark(vector<Reminder>& list_reminder) {
             cerr << error.what() << endl;
             repeat = true;
         }
-        catch (errors::YearError& error) {
-            cerr << error.what() << endl;
-            repeat = true;
-        }
         catch (errors::MonthError& error) {
             cerr << error.what() << endl;
             repeat = true;
@@ -177,10 +181,15 @@ Reminder addReminderbookmark(vector<Reminder>& list_reminder) {
             cerr << error.what() << endl;
             repeat = true;
         }
+        catch (errors::PassedDateTimeError& error) {
+            cerr << error.what() << endl;
+            repeat = true;
+        }
     } while (repeat);
 }
 
-void print_list(const vector<Reminder> &bookmarks) {
+// Выводит список напоминаний в консоль
+void printList(const vector<Reminder> &bookmarks) {
     if (bookmarks.empty()) {
         cout << "No reminders." << endl;
         return;
@@ -203,33 +212,34 @@ void print_list(const vector<Reminder> &bookmarks) {
     }
 }
 
-void delete_reminder(vector<Reminder> &bookmarks) {
+// Удаляет напоминание
+void deleteReminder(vector<Reminder> &bookmarks) {
     string delete_index;
-    cout << "Enter the id of the reminder you want to delete: ";
+    cout << "Enter the id of the reminder you want to delete:";
     getline(cin, delete_index);
-    int request_int;
+    const int request_int = stoi(delete_index);
+
     try {
-        request_int = stoi(delete_index);
-    } catch (errors::IndexError& error) {
-        cout << "Invalid number." << endl;
-        return;
+        if (request_int >= bookmarks.size() || request_int < 0) {
+            throw errors::IndexError("You entered a non-existent id.");
+        }
     }
-    if (request_int >= bookmarks.size() || request_int < 0) {
-        cout << "You entered a non-existent id." << endl;
-        return;
+    catch (errors::IndexError& error) {
+        cerr << error.what() << endl;
     }
     bookmarks.erase(bookmarks.begin() + request_int);
     saveToTxt(bookmarks);
     cout << "Reminder deleted successfully." << endl;
 }
 
+// Проверяет напоминание на соответствие текущему времени, выводит и удаляет из списка, если соответствует
 void checkReminders(vector<Reminder>& reminder_list) {
-    auto now = chrono::system_clock::now();
-    auto time = chrono::system_clock::to_time_t(now);
-    auto time_local = *localtime(&time);
+    const auto now = chrono::system_clock::now();
+    const auto time = chrono::system_clock::to_time_t(now);
+    const auto time_local = *localtime(&time);
 
-    auto current_date = new Date(time_local.tm_mday, time_local.tm_mon + 1, time_local.tm_year + 1900);
-    auto current_time = new Time(time_local.tm_hour, time_local.tm_min);
+    const auto current_date = new Date(time_local.tm_mday, time_local.tm_mon + 1, time_local.tm_year + 1900);
+    const auto current_time = new Time(time_local.tm_hour, time_local.tm_min);
 
     vector<int> to_delete;
     for (int i = 0; i < reminder_list.size(); i++) {
@@ -243,8 +253,8 @@ void checkReminders(vector<Reminder>& reminder_list) {
         }
     }
 
-    for (auto it = to_delete.rbegin(); it != to_delete.rend(); ++it) {
-        reminder_list.erase(reminder_list.begin() + *it);
+    for (const int & it : std::ranges::reverse_view(to_delete)) {
+        reminder_list.erase(reminder_list.begin() + it);
     }
     if (!to_delete.empty()) {
         saveToTxt(reminder_list);
@@ -258,7 +268,6 @@ int main() {
     string request;
     vector<Reminder> list_reminder;
 
-    cout << "Loading reminders..." << endl;
     loadFromTxt(list_reminder);
 
     thread reminderThread([&list_reminder]() {
@@ -275,11 +284,11 @@ int main() {
              << endl;
         getline(cin, request);
         if (request == "add") {
-            addReminderbookmark(list_reminder);
+            addReminder(list_reminder);
         } else if (request == "view") {
-            print_list(list_reminder);
+            printList(list_reminder);
         } else if (request == "del") {
-            delete_reminder(list_reminder);
+            deleteReminder(list_reminder);
         }
     }
     saveToTxt(list_reminder);

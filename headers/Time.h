@@ -8,7 +8,6 @@ enum Times {
 };
 
 class Time {
-private:
     unsigned int _hour;
     unsigned int _minutes;
 
