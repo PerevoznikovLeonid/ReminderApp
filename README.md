@@ -77,7 +77,7 @@ classDiagram
         <<exception>>
     }
 
-    class YearError {
+    class PassedDateTimeError {
         <<exception>>
     }
 
@@ -109,7 +109,8 @@ classDiagram
     ProgramError <|-- DateError
     ProgramError <|-- TimeError
 
-    DateError <|-- YearError
+    ProgramError <|-- PassedDateTimeError
+
     DateError <|-- MonthError
     DateError <|-- DayError
 
@@ -119,6 +120,7 @@ classDiagram
     Reminder --> Date 
     Reminder --> Time 
 ```
+
 
 
 
