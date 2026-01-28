@@ -41,7 +41,7 @@ namespace errors {
         ~DayError() noexcept override = default;
     };
 
-    class PassedDateTimeError : public DateError {
+    class PassedDateTimeError : public ProgramError {
     public:
         explicit PassedDateTimeError(const std::string& message)
           : DateError(message) {
@@ -96,5 +96,6 @@ namespace errors {
     };
 
 }
+
 
 #endif //REMINDERAPP_ERRORTYPES_H
