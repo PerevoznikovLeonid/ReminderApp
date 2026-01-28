@@ -40,7 +40,6 @@ classDiagram
         +getYear() unsigned int
         #checkMonth(month) unsigned int
         #checkDay(day, end) unsigned int
-        #checkYear(year) unsigned int
     }
     
     class Time {
@@ -120,5 +119,6 @@ classDiagram
     Reminder --> Date 
     Reminder --> Time 
 ```
+
 
 
